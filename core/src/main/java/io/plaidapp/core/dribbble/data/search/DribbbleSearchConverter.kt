@@ -31,6 +31,8 @@ import java.util.Date
 import java.util.regex.Pattern
 
 private const val HOST = "https://dribbble.com"
+private const val SHOTS = "/shots/"
+
 private val PATTERN_PLAYER_ID = Pattern.compile("users/(\\d+?)/", Pattern.DOTALL)
 private val DATE_FORMAT = SimpleDateFormat("MMMM d, yyyy")
 
@@ -58,7 +60,7 @@ object DribbbleSearchConverter : Converter<ResponseBody, List<Shot>> {
 
     private fun parseShot(element: Element): Shot {
         val id = element.id().replace("screenshot-", "").toLong()
-        val htmlUrl = HOST + element.select("a.dribbble-link").first().attr("href")
+        val htmlUrl = HOST + SHOTS + id
         val descriptionBlock = element.select("a.dribbble-over").first()
         val title = descriptionBlock.select("strong").first().text()
         // API responses wrap description in a <p> tag. Do the same for consistent display.
@@ -70,7 +72,7 @@ object DribbbleSearchConverter : Converter<ResponseBody, List<Shot>> {
         if (imgUrl.contains("_teaser.")) {
             imgUrl = imgUrl.replace("_teaser.", ".")
         }
-        val animated = element.select("div.gif-indicator").first() != null
+        val animated = imgUrl?.endsWith(".gif", ignoreCase = true) ?: false
         val createdAt: Date? = try {
             DATE_FORMAT.parse(descriptionBlock.select("em.timestamp").first().text())
         } catch (e: ParseException) {

@@ -18,10 +18,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-apply from: '../core_dependencies.gradle'
+apply from: '../shared_dependencies.gradle'
 apply from: '../test_dependencies.gradle'
-
-apply from: '../repositories.gradle'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -47,6 +45,4 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
     implementation "junit:junit:${versions.junit}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
-
 }
-
